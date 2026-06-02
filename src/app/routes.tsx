@@ -2,12 +2,16 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import PageContainer from '../components/common/PageContainer';
 import MainLayout from '../layouts/MainLayout';
+import ProjectCreate from '../features/projects/pages/ProjectCreate';
+import ProjectDashboard from '../features/projects/pages/ProjectDashboard';
+import ProjectDetails from '../features/projects/pages/ProjectDetails';
+import ProjectEdit from '../features/projects/pages/ProjectEdit';
+import ProjectList from '../features/projects/pages/ProjectList';
 import Login from '../pages/auth/Login';
 import Dashboard from '../pages/dashboard/Dashboard';
 
 const modulePages = {
   employees: 'Employee Management',
-  projects: 'Project Management',
   skills: 'Skills Management',
   allocations: 'Resource Allocation',
   reports: 'Reports',
@@ -31,7 +35,11 @@ export function AppRoutes() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/employees" element={<ModulePlaceholder title={modulePages.employees} />} />
-          <Route path="/projects" element={<ModulePlaceholder title={modulePages.projects} />} />
+          <Route path="/projects" element={<ProjectList />} />
+          <Route path="/projects/create" element={<ProjectCreate />} />
+          <Route path="/projects/dashboard" element={<ProjectDashboard />} />
+          <Route path="/projects/edit/:id" element={<ProjectEdit />} />
+          <Route path="/projects/:id" element={<ProjectDetails />} />
           <Route path="/skills" element={<ModulePlaceholder title={modulePages.skills} />} />
           <Route path="/allocations" element={<ModulePlaceholder title={modulePages.allocations} />} />
           <Route path="/reports" element={<ModulePlaceholder title={modulePages.reports} />} />
