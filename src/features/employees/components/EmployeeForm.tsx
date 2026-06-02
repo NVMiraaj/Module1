@@ -1,11 +1,13 @@
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, MenuItem, Stack, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, MenuItem, Stack, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import type { Employee, EmployeeFormValues, EmployeeStatus } from '../types/employee';
+import { useAppSelector } from '../../../app/hooks';
+import type { Employee, EmployeeFormValues, EmployeeRole, EmployeeStatus } from '../types/employee';
 
 const statusOptions: EmployeeStatus[] = ['Active', 'Inactive', 'On Leave'];
+const roleOptions: EmployeeRole[] = ['Admin', 'HR', 'Manager', 'Team Lead', 'Employee'];
 const departmentOptions = [
   'Application Development',
   'Cloud Services',
@@ -48,6 +50,8 @@ const schema: yup.ObjectSchema<EmployeeFormValues> = yup.object({
     .string()
     .oneOf([...designationOptions], 'Select a valid designation')
     .required('Designation is required'),
+  role: yup.mixed<EmployeeRole>().oneOf(roleOptions).required('Role is required'),
+  skillIds: yup.array().of(yup.number().required()).required(),
   experience: yup
     .number()
     .typeError('Experience is required')
@@ -66,6 +70,8 @@ const emptyValues: EmployeeFormValues = {
   phone: '',
   department: 'Application Development',
   designation: 'Software Engineer',
+  role: 'Employee',
+  skillIds: [],
   experience: 0,
   joiningDate: new Date().toISOString().slice(0, 10),
   status: 'Active',
@@ -78,6 +84,7 @@ interface EmployeeFormProps {
 }
 
 export default function EmployeeForm({ employee, onCancel, onSubmit }: EmployeeFormProps) {
+  const skills = useAppSelector((state) => state.skills.skills);
   const {
     control,
     formState: { errors, isSubmitting },
@@ -244,18 +251,63 @@ export default function EmployeeForm({ employee, onCancel, onSubmit }: EmployeeF
           />
         </Stack>
 
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          <Controller
+            control={control}
+            name="role"
+            render={({ field }) => (
+              <TextField
+                {...field}
+                error={Boolean(errors.role)}
+                fullWidth
+                helperText={errors.role?.message}
+                label="Role"
+                select
+              >
+                {roleOptions.map((role) => (
+                  <MenuItem key={role} value={role}>
+                    {role}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+          <Controller
+            control={control}
+            name="experience"
+            render={({ field }) => (
+              <TextField
+                {...field}
+                error={Boolean(errors.experience)}
+                fullWidth
+                helperText={errors.experience?.message}
+                label="Experience"
+                onChange={(event) => field.onChange(Number(event.target.value))}
+                type="number"
+              />
+            )}
+          />
+        </Stack>
+
         <Controller
           control={control}
-          name="experience"
+          name="skillIds"
           render={({ field }) => (
-            <TextField
-              {...field}
-              error={Boolean(errors.experience)}
-              fullWidth
-              helperText={errors.experience?.message}
-              label="Experience"
-              onChange={(event) => field.onChange(Number(event.target.value))}
-              type="number"
+            <Autocomplete
+              getOptionLabel={(option) => option.skillName}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              multiple
+              onChange={(_event, value) => field.onChange(value.map((skill) => skill.id))}
+              options={skills}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={Boolean(errors.skillIds)}
+                  helperText={errors.skillIds?.message}
+                  label="Skills"
+                />
+              )}
+              value={skills.filter((skill) => field.value.includes(skill.id))}
             />
           )}
         />

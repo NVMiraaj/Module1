@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { CssBaseline, GlobalStyles, ThemeProvider } from '@mui/material';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'react-redux';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,27 +10,29 @@ import { store } from './app/store';
 import { theme } from './theme/theme';
 import { queryClient } from './app/queryClient';
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <GlobalStyles
-          styles={{
-            body: {
-              minHeight: '100vh',
-              backgroundColor: '#f5f7fb',
-            },
-            '#root': {
-              minHeight: '100vh',
-            },
-          }}
-        />
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <GlobalStyles
+            styles={{
+              body: {
+                minHeight: '100vh',
+                backgroundColor: '#f5f7fb',
+              },
+              '#root': {
+                minHeight: '100vh',
+              },
+            }}
+          />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
       </QueryClientProvider>
     </Provider>
   </React.StrictMode>,

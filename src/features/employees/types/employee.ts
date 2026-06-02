@@ -1,5 +1,6 @@
 
 export type EmployeeStatus = 'Active' | 'Inactive' | 'On Leave';
+export type EmployeeRole = 'Admin' | 'HR' | 'Manager' | 'Team Lead' | 'Employee';
 
 export interface Employee {
   id: number;
@@ -10,6 +11,8 @@ export interface Employee {
   phone: string;
   department: string;
   designation: string;
+  role: EmployeeRole;
+  skillIds: number[];
   experience: number;
   joiningDate: string;
   status: EmployeeStatus;
