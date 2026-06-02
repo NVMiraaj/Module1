@@ -34,10 +34,9 @@ export default function MainLayout() {
         component="main"
         sx={{
           flexGrow: 1,
-          ml: { md: `${drawerWidth}px` },
           p: { xs: 2, md: 3 },
           pt: { xs: 11, md: 12 },
-          transition: (theme) => theme.transitions.create('margin-left'),
+          transition: (theme) => theme.transitions.create('width'),
           width: { md: `calc(100% - ${drawerWidth}px)` },
         }}
       >

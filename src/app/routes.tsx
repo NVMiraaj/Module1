@@ -7,6 +7,7 @@ import ProjectDashboard from '../features/projects/pages/ProjectDashboard';
 import ProjectDetails from '../features/projects/pages/ProjectDetails';
 import ProjectEdit from '../features/projects/pages/ProjectEdit';
 import ProjectList from '../features/projects/pages/ProjectList';
+import EmployeeList from '../features/employees/pages/EmployeeList';
 import Login from '../pages/auth/Login';
 import Dashboard from '../pages/dashboard/Dashboard';
 
@@ -34,7 +35,7 @@ export function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/employees" element={<ModulePlaceholder title={modulePages.employees} />} />
+          <Route path="/employees" element={<EmployeeList />} />
           <Route path="/projects" element={<ProjectList />} />
           <Route path="/projects/create" element={<ProjectCreate />} />
           <Route path="/projects/dashboard" element={<ProjectDashboard />} />
