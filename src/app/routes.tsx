@@ -8,6 +8,12 @@ import ProjectDetails from '../features/projects/pages/ProjectDetails';
 import ProjectEdit from '../features/projects/pages/ProjectEdit';
 import ProjectList from '../features/projects/pages/ProjectList';
 import EmployeeList from '../features/employees/pages/EmployeeList';
+import AllocationDashboard from '../features/allocations/pages/AllocationDashboard';
+import AllocationList from '../features/allocations/pages/AllocationList';
+import BenchResources from '../features/allocations/pages/BenchResources';
+import BillableResources from '../features/allocations/pages/BillableResources';
+import ResourceUtilization from '../features/allocations/pages/ResourceUtilization';
+import EmployeeAllocationStatus from '../features/allocations/pages/EmployeeAllocationStatus';
 import Login from '../pages/auth/Login';
 import Dashboard from '../pages/dashboard/Dashboard';
 
@@ -41,8 +47,13 @@ export function AppRoutes() {
           <Route path="/projects/dashboard" element={<ProjectDashboard />} />
           <Route path="/projects/edit/:id" element={<ProjectEdit />} />
           <Route path="/projects/:id" element={<ProjectDetails />} />
+          <Route path="/allocations" element={<AllocationDashboard />} />
+          <Route path="/allocations/list" element={<AllocationList />} />
+          <Route path="/allocations/status" element={<EmployeeAllocationStatus />} />
+          <Route path="/allocations/bench" element={<BenchResources />} />
+          <Route path="/allocations/billable" element={<BillableResources />} />
+          <Route path="/allocations/utilization" element={<ResourceUtilization />} />
           <Route path="/skills" element={<ModulePlaceholder title={modulePages.skills} />} />
-          <Route path="/allocations" element={<ModulePlaceholder title={modulePages.allocations} />} />
           <Route path="/reports" element={<ModulePlaceholder title={modulePages.reports} />} />
           <Route path="/settings" element={<ModulePlaceholder title={modulePages.settings} />} />
         </Route>
