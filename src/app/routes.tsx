@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import PageContainer from '../components/common/PageContainer';
 import MainLayout from '../layouts/MainLayout';
+import EmployeeList from '../features/employees/pages/EmployeeList';
 import Login from '../pages/auth/Login';
 import Dashboard from '../pages/dashboard/Dashboard';
 
@@ -30,7 +31,7 @@ export function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/employees" element={<ModulePlaceholder title={modulePages.employees} />} />
+          <Route path="/employees" element={<EmployeeList />} />
           <Route path="/projects" element={<ModulePlaceholder title={modulePages.projects} />} />
           <Route path="/skills" element={<ModulePlaceholder title={modulePages.skills} />} />
           <Route path="/allocations" element={<ModulePlaceholder title={modulePages.allocations} />} />
