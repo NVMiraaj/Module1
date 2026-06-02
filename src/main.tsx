@@ -1,14 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
 import { CssBaseline, GlobalStyles, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { store } from './app/store';
 import { theme } from './theme/theme';
-import { queryClient } from './app/queryClient';
 
 const queryClient = new QueryClient();
 
