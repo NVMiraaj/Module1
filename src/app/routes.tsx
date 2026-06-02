@@ -8,6 +8,14 @@ import ProjectDetails from '../features/projects/pages/ProjectDetails';
 import ProjectEdit from '../features/projects/pages/ProjectEdit';
 import ProjectList from '../features/projects/pages/ProjectList';
 import EmployeeList from '../features/employees/pages/EmployeeList';
+import EmployeeSkillMapping from '../features/skills/pages/EmployeeSkillMapping';
+import ResourceSearchBySkill from '../features/skills/pages/ResourceSearchBySkill';
+import SkillCreate from '../features/skills/pages/SkillCreate';
+import SkillDashboard from '../features/skills/pages/SkillDashboard';
+import SkillDetails from '../features/skills/pages/SkillDetails';
+import SkillEdit from '../features/skills/pages/SkillEdit';
+import SkillList from '../features/skills/pages/SkillList';
+import SkillMatrix from '../features/skills/pages/SkillMatrix';
 import Login from '../pages/auth/Login';
 import Dashboard from '../pages/dashboard/Dashboard';
 
@@ -41,7 +49,14 @@ export function AppRoutes() {
           <Route path="/projects/dashboard" element={<ProjectDashboard />} />
           <Route path="/projects/edit/:id" element={<ProjectEdit />} />
           <Route path="/projects/:id" element={<ProjectDetails />} />
-          <Route path="/skills" element={<ModulePlaceholder title={modulePages.skills} />} />
+          <Route path="/skills" element={<SkillList />} />
+          <Route path="/skills/create" element={<SkillCreate />} />
+          <Route path="/skills/dashboard" element={<SkillDashboard />} />
+          <Route path="/skills/edit/:id" element={<SkillEdit />} />
+          <Route path="/skills/mapping" element={<EmployeeSkillMapping />} />
+          <Route path="/skills/matrix" element={<SkillMatrix />} />
+          <Route path="/skills/resources" element={<ResourceSearchBySkill />} />
+          <Route path="/skills/:id" element={<SkillDetails />} />
           <Route path="/allocations" element={<ModulePlaceholder title={modulePages.allocations} />} />
           <Route path="/reports" element={<ModulePlaceholder title={modulePages.reports} />} />
           <Route path="/settings" element={<ModulePlaceholder title={modulePages.settings} />} />

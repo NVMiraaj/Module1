@@ -74,7 +74,9 @@ export default function Sidebar({ collapsed, mobileOpen, onMobileClose }: Sideba
               component={NavLink}
               key={item.path}
               onClick={isDesktop ? undefined : onMobileClose}
-              selected={item.path === '/projects' ? location.pathname.startsWith('/projects') : location.pathname === item.path}
+              selected={
+                item.path === '/projects' || item.path === '/skills' ? location.pathname.startsWith(item.path) : location.pathname === item.path
+              }
               sx={{
                 borderRadius: 2,
                 minHeight: 48,
