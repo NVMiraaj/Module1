@@ -18,7 +18,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 export const DRAWER_WIDTH = 280;
 export const COLLAPSED_DRAWER_WIDTH = 72;
@@ -42,6 +42,7 @@ interface SidebarProps {
 export default function Sidebar({ collapsed, mobileOpen, onMobileClose }: SidebarProps) {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
   const drawerWidth = collapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH;
+  const location = useLocation();
 
   const drawerContent = (
     <Box sx={{ height: '100%', overflowX: 'hidden', px: 1.5, py: 2 }}>
@@ -73,12 +74,13 @@ export default function Sidebar({ collapsed, mobileOpen, onMobileClose }: Sideba
               component={NavLink}
               key={item.path}
               onClick={isDesktop ? undefined : onMobileClose}
+              selected={item.path === '/projects' ? location.pathname.startsWith('/projects') : location.pathname === item.path}
               sx={{
                 borderRadius: 2,
                 minHeight: 48,
                 my: 0.5,
                 px: collapsed ? 1.5 : 2,
-                '&.active': {
+                '&.active, &.Mui-selected, &.Mui-selected:hover': {
                   bgcolor: 'primary.main',
                   color: 'primary.contrastText',
                   '& .MuiListItemIcon-root': {
