@@ -1,13 +1,13 @@
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Autocomplete, Box, Button, MenuItem, Stack, TextField } from '@mui/material';
+import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { useAppSelector } from '../../../app/hooks';
-import type { Employee, EmployeeFormValues, EmployeeRole, EmployeeStatus } from '../types/employee';
+import type { Employee, EmployeeFormValues, EmployeeStatus } from '../types/employee';
 
 const statusOptions: EmployeeStatus[] = ['Active', 'Inactive', 'On Leave'];
-const roleOptions: EmployeeRole[] = ['Admin', 'HR', 'Manager', 'Team Lead', 'Employee'];
 const departmentOptions = [
   'Application Development',
   'Cloud Services',
@@ -39,30 +39,31 @@ const designationOptions = [
   'Support Engineer',
 ] as const;
 
-const schema: yup.ObjectSchema<EmployeeFormValues> = yup.object({
-  employeeCode: yup.string().trim().required('Employee code is required').max(20, 'Use 20 characters or fewer'),
-  firstName: yup.string().trim().required('First name is required').max(50, 'Use 50 characters or fewer'),
-  lastName: yup.string().trim().required('Last name is required').max(50, 'Use 50 characters or fewer'),
-  email: yup.string().trim().email('Enter a valid email').required('Email is required'),
-  phone: yup.string().trim().required('Phone is required').max(24, 'Use 24 characters or fewer'),
-  department: yup.string().oneOf([...departmentOptions], 'Select a valid department').required('Department is required'),
-  designation: yup
-    .string()
-    .oneOf([...designationOptions], 'Select a valid designation')
-    .required('Designation is required'),
-  role: yup.mixed<EmployeeRole>().oneOf(roleOptions).required('Role is required'),
-  skillIds: yup.array().of(yup.number().required()).required(),
-  experience: yup
-    .number()
-    .typeError('Experience is required')
-    .min(0, 'Experience cannot be negative')
-    .max(50, 'Experience looks too high')
-    .required('Experience is required'),
-  joiningDate: yup.string().required('Joining date is required'),
-  status: yup.mixed<EmployeeStatus>().oneOf(statusOptions).required('Status is required'),
-});
+const getSchema = (roleIds: number[]): yup.ObjectSchema<EmployeeFormValues> =>
+  yup.object({
+    employeeCode: yup.string().trim().required('Employee code is required').max(20, 'Use 20 characters or fewer'),
+    firstName: yup.string().trim().required('First name is required').max(50, 'Use 50 characters or fewer'),
+    lastName: yup.string().trim().required('Last name is required').max(50, 'Use 50 characters or fewer'),
+    email: yup.string().trim().email('Enter a valid email').required('Email is required'),
+    phone: yup.string().trim().required('Phone is required').max(24, 'Use 24 characters or fewer'),
+    department: yup.string().oneOf([...departmentOptions], 'Select a valid department').required('Department is required'),
+    designation: yup
+      .string()
+      .oneOf([...designationOptions], 'Select a valid designation')
+      .required('Designation is required'),
+    roleId: yup.number().oneOf(roleIds, 'Select a valid role').required('Role is required'),
+    skillIds: yup.array().of(yup.number().required()).required(),
+    experience: yup
+      .number()
+      .typeError('Experience is required')
+      .min(0, 'Experience cannot be negative')
+      .max(50, 'Experience looks too high')
+      .required('Experience is required'),
+    joiningDate: yup.string().required('Joining date is required'),
+    status: yup.mixed<EmployeeStatus>().oneOf(statusOptions).required('Status is required'),
+  });
 
-const emptyValues: EmployeeFormValues = {
+const getEmptyValues = (roleId: number): EmployeeFormValues => ({
   employeeCode: '',
   firstName: '',
   lastName: '',
@@ -70,12 +71,12 @@ const emptyValues: EmployeeFormValues = {
   phone: '',
   department: 'Application Development',
   designation: 'Software Engineer',
-  role: 'Employee',
+  roleId,
   skillIds: [],
   experience: 0,
   joiningDate: new Date().toISOString().slice(0, 10),
   status: 'Active',
-};
+});
 
 interface EmployeeFormProps {
   employee?: Employee | null;
@@ -85,12 +86,17 @@ interface EmployeeFormProps {
 
 export default function EmployeeForm({ employee, onCancel, onSubmit }: EmployeeFormProps) {
   const skills = useAppSelector((state) => state.skills.skills);
+  const roles = useAppSelector((state) => state.roles.roles);
+  const activeRoles = useMemo(() => roles.filter((role) => role.status === 'Active'), [roles]);
+  const roleIds = useMemo(() => activeRoles.map((role) => role.id), [activeRoles]);
+  const defaultRoleId = activeRoles.find((role) => role.roleName === 'Software Engineer')?.id ?? activeRoles[0]?.id ?? 0;
+  const schema = useMemo(() => getSchema(roleIds), [roleIds]);
   const {
     control,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm<EmployeeFormValues>({
-    defaultValues: employee ? { ...employee } : emptyValues,
+    defaultValues: employee ? { ...employee } : getEmptyValues(defaultRoleId),
     resolver: yupResolver(schema),
   });
 
@@ -254,19 +260,20 @@ export default function EmployeeForm({ employee, onCancel, onSubmit }: EmployeeF
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <Controller
             control={control}
-            name="role"
+            name="roleId"
             render={({ field }) => (
               <TextField
-                {...field}
-                error={Boolean(errors.role)}
+                error={Boolean(errors.roleId)}
                 fullWidth
-                helperText={errors.role?.message}
+                helperText={errors.roleId?.message}
                 label="Role"
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 select
+                value={field.value}
               >
-                {roleOptions.map((role) => (
-                  <MenuItem key={role} value={role}>
-                    {role}
+                {activeRoles.map((role) => (
+                  <MenuItem key={role.id} value={role.id}>
+                    {role.roleName}
                   </MenuItem>
                 ))}
               </TextField>

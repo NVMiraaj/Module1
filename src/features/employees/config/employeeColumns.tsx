@@ -3,16 +3,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Box, Chip } from '@mui/material';
 import type { GridColDef } from '@mui/x-data-grid';
 import { GridActionsCellItem } from '@mui/x-data-grid';
+import type { Role } from '../../admin/types/role';
 import type { Skill } from '../../skills/types';
 import type { Employee } from '../types/employee';
 
 interface EmployeeColumnHandlers {
+  roles: Role[];
   skills: Skill[];
   onEdit: (employee: Employee) => void;
   onDelete: (employee: Employee) => void;
 }
 
-export function getEmployeeColumns({ skills, onEdit, onDelete }: EmployeeColumnHandlers): GridColDef<Employee>[] {
+export function getEmployeeColumns({ roles, skills, onEdit, onDelete }: EmployeeColumnHandlers): GridColDef<Employee>[] {
+  const roleNameById = new Map(roles.map((role) => [role.id, role.roleName]));
   const skillNameById = new Map(skills.map((skill) => [skill.id, skill.skillName]));
 
   return [
@@ -27,7 +30,13 @@ export function getEmployeeColumns({ skills, onEdit, onDelete }: EmployeeColumnH
     { field: 'email', headerName: 'Email', minWidth: 220, flex: 1.2 },
     { field: 'department', headerName: 'Department', minWidth: 150, flex: 0.9 },
     { field: 'designation', headerName: 'Designation', minWidth: 190, flex: 1 },
-    { field: 'role', headerName: 'Role', minWidth: 130, flex: 0.7 },
+    {
+      field: 'roleId',
+      headerName: 'Role',
+      minWidth: 190,
+      flex: 1,
+      valueGetter: (_value, row) => roleNameById.get(row.roleId) ?? 'Unassigned',
+    },
     {
       field: 'skillIds',
       headerName: 'Skills',

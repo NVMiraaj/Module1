@@ -25,6 +25,7 @@ const statusFilters: EmployeeFilters['status'][] = ['All', 'Active', 'Inactive',
 export default function EmployeeList() {
   const dispatch = useAppDispatch();
   const { employees, error, filters, loading } = useAppSelector((state) => state.employees);
+  const roles = useAppSelector((state) => state.roles.roles);
   const skills = useAppSelector((state) => state.skills.skills);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
@@ -40,6 +41,7 @@ export default function EmployeeList() {
 
   const filteredEmployees = useMemo(() => {
     const search = filters.search.trim().toLowerCase();
+    const roleNameById = new Map(roles.map((role) => [role.id, role.roleName]));
     const skillNameById = new Map(skills.map((skill) => [skill.id, skill.skillName]));
 
     return employees.filter((employee) => {
@@ -51,7 +53,7 @@ export default function EmployeeList() {
         employee.email,
         employee.department,
         employee.designation,
-        employee.role,
+        roleNameById.get(employee.roleId) ?? '',
         ...employee.skillIds.map((skillId) => skillNameById.get(skillId) ?? ''),
       ]
         .join(' ')
@@ -59,11 +61,12 @@ export default function EmployeeList() {
 
       return matchesStatus && (!search || searchable.includes(search));
     });
-  }, [employees, filters.search, filters.status, skills]);
+  }, [employees, filters.search, filters.status, roles, skills]);
 
   const columns = useMemo(
     () =>
       getEmployeeColumns({
+        roles,
         skills,
         onDelete: (employee) => setDeleteTarget(employee),
         onEdit: (employee) => {
@@ -71,7 +74,7 @@ export default function EmployeeList() {
           setDialogOpen(true);
         },
       }),
-    [skills],
+    [roles, skills],
   );
 
   const handleAdd = () => {
