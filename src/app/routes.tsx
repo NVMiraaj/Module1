@@ -2,6 +2,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import PageContainer from '../components/common/PageContainer';
 import MainLayout from '../layouts/MainLayout';
+import ProjectDesignationList from '../features/admin/pages/ProjectDesignationList';
+import RoleList from '../features/admin/pages/RoleList';
 import ProjectCreate from '../features/projects/pages/ProjectCreate';
 import ProjectDashboard from '../features/projects/pages/ProjectDashboard';
 import ProjectDetails from '../features/projects/pages/ProjectDetails';
@@ -21,6 +23,7 @@ import Dashboard from '../pages/dashboard/Dashboard';
 
 const modulePages = {
   employees: 'Employee Management',
+  admin: 'Admin',
   skills: 'Skills Management',
   allocations: 'Resource Allocation',
   reports: 'Reports',
@@ -43,6 +46,9 @@ export function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<Navigate to="/admin/roles" replace />} />
+          <Route path="/admin/project-designations" element={<ProjectDesignationList />} />
+          <Route path="/admin/roles" element={<RoleList />} />
           <Route path="/employees" element={<EmployeeList />} />
           <Route path="/projects" element={<ProjectList />} />
           <Route path="/projects/create" element={<ProjectCreate />} />
